@@ -50,14 +50,6 @@
   .brand-mark {
     height: 30px;
   }
-
-  .brand-copy__title {
-    font-size: 0.8rem;
-  }
-
-  .brand-copy__subtitle {
-    font-size: 0.62rem;
-  }
 }
 
 @media (max-width: 600px) {
@@ -73,10 +65,6 @@
 
   .navbar__actions {
     gap: 6px;
-  }
-
-  .brand-copy {
-    display: none;
   }
 
   .navbar__page-link,

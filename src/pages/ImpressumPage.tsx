@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
-import { projectInfo } from '../config/projectInfo';
 
 export function ImpressumPage({ onOpenAbout }: { onOpenAbout: () => void }) {
   return (
@@ -13,24 +12,9 @@ export function ImpressumPage({ onOpenAbout }: { onOpenAbout: () => void }) {
         <section className="legal-page__section">
           <h2>Responsible for content</h2>
           <p>
-            <strong className="legal-page__name">{projectInfo.workshop}</strong><br />
-            {projectInfo.unit}: {projectInfo.unitTitle}<br />
-            {projectInfo.school}<br />
-            Tutors: {projectInfo.tutors.join(' + ')}<br />
-            Programme information:{' '}
-            <a href={projectInfo.unitUrl} target="_blank" rel="noreferrer noopener">
-              Social Algorithms Research Group
-            </a>
-            <br />
-            Repository:{' '}
-            <a href={projectInfo.currentRepoUrl} target="_blank" rel="noreferrer noopener">
-              ReclaimSeoul/Wasp-Atlas-Explorer
-            </a>
-          </p>
-          <p>
             <strong className="legal-page__name">Roger Winkler</strong><br />
             Email:{' '}
-            <a href={`mailto:${projectInfo.contactEmail}`}>{projectInfo.contactEmail}</a><br />
+            <a href="mailto:hello@rogerwinkler.de">hello@rogerwinkler.de</a><br />
             Web:{' '}
             <a href="https://www.rogerwinkler.de" target="_blank" rel="noreferrer noopener">
               rogerwinkler.de
@@ -39,7 +23,7 @@ export function ImpressumPage({ onOpenAbout }: { onOpenAbout: () => void }) {
           <p>
             <strong className="legal-page__name">Andrea Rossi</strong><br />
             Email:{' '}
-            <a href={`mailto:${projectInfo.contactEmail}`}>{projectInfo.contactEmail}</a><br />
+            <a href="mailto:a.rossi.andrea@gmail.com">a.rossi.andrea@gmail.com</a><br />
             Web:{' '}
             <a href="https://thecomputationalhive.com/" target="_blank" rel="noreferrer noopener">
               thecomputationalhive.com
@@ -73,27 +57,17 @@ export function ImpressumPage({ onOpenAbout }: { onOpenAbout: () => void }) {
         <section className="legal-page__section">
           <h2>Open source</h2>
           <p>
-            This Reclaim Seoul website is a clone of the original open-source
-            Wasp Atlas Explorer. It keeps references to the upstream project and
-            related repositories:
+            WASP Atlas is open source and split into two repositories:
             <br />
-            <a href={projectInfo.originalAtlasUrl} target="_blank" rel="noreferrer noopener">
-              Wasp Atlas dataset collection
-            </a>
-            <br />
-            <a href={projectInfo.originalExplorerUrl} target="_blank" rel="noreferrer noopener">
-              Original Wasp Atlas Explorer
-            </a>
-            <br />
-            <a href={projectInfo.webwaspjsUrl} target="_blank" rel="noreferrer noopener">
+            <a href="https://github.com/winroger/waspjs" target="_blank" rel="noreferrer noopener">
               webwaspjs
             </a>{' '}
             contains the reusable assembly engine and core logic.
             <br />
-            <a href={projectInfo.waspPluginUrl} target="_blank" rel="noreferrer noopener">
-              WASP Grasshopper plug-in
+            <a href="https://github.com/Wasp-Framework/Wasp-Atas-Explorer" target="_blank" rel="noreferrer noopener">
+              Wasp-Atas-Explorer
             </a>{' '}
-            is the original open-source discrete design toolkit by Andrea Rossi.
+            contains the website/app and project presentation around that engine.
           </p>
         </section>
       </main>

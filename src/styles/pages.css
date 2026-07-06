@@ -107,12 +107,6 @@
   margin: 0;
 }
 
-.landing__hero-desc a {
-  color: var(--text);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
 .landing__hero-actions {
   display: flex;
   flex-wrap: wrap;

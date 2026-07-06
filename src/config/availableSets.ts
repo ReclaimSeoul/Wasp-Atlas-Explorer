@@ -1,6 +1,6 @@
 import { createAggregationFromData } from 'webwaspjs';
 
-const DEFAULT_ATLAS_RAW_BASE = 'https://raw.githubusercontent.com/ReclaimSeoul/Reclaimed-Design-Systems/main/';
+const DEFAULT_ATLAS_RAW_BASE = 'https://raw.githubusercontent.com/Wasp-Framework/Wasp-Atlas/main/';
 const ATLAS_RAW_BASE = (import.meta.env.VITE_ATLAS_RAW_BASE || DEFAULT_ATLAS_RAW_BASE).replace(/\/?$/, '/');
 const ATLAS_CATALOG_URL = `${ATLAS_RAW_BASE}catalog/catalog.json`;
 
@@ -33,20 +33,13 @@ type CatalogLoadResult = {
 type AtlasSystem = {
   slug?: string;
   name?: string;
-  title?: string;
-  description?: string | { short?: string; long?: string };
+  description?: string;
   author?: string;
-  authors?: Array<{ name?: string; affiliation?: string } | string>;
   tags?: string[];
-  license?: string | { value?: string; name?: string };
+  license?: string;
   thumbnail?: string;
   aggregation_url?: string;
   meta_url?: string;
-  files?: {
-    aggregation?: string;
-    meta?: string;
-    thumbnail?: string;
-  };
 };
 
 type AtlasCatalog = {
@@ -54,48 +47,17 @@ type AtlasCatalog = {
 };
 
 type AtlasMeta = {
-  title?: string;
-  description?: string | { short?: string; long?: string };
-  author?: string;
-  authors?: Array<{ name?: string; affiliation?: string } | string>;
   tags?: string[];
-  license?: string | { value?: string; name?: string };
+  license?: string;
   units?: string;
   version?: string;
   created?: string;
   thumbnail?: string;
-  files?: {
-    thumbnail?: string;
-  };
   colors?: string[];
   palette?: string[];
   byPart?: Record<string, string>;
   by_part?: Record<string, string>;
 };
-
-function normalizeText(value: unknown): string {
-  return typeof value === 'string' ? value.trim() : '';
-}
-
-function normalizeDescription(value: AtlasSystem['description'] | AtlasMeta['description']): string {
-  if (typeof value === 'string') return value.trim();
-  return normalizeText(value?.short) || normalizeText(value?.long);
-}
-
-function normalizeLicense(value: AtlasSystem['license'] | AtlasMeta['license']): string {
-  if (typeof value === 'string') return value.trim();
-  return normalizeText(value?.value) || normalizeText(value?.name);
-}
-
-function normalizeAuthors(value: AtlasSystem['authors'] | AtlasMeta['authors'], fallback?: string): string {
-  const fallbackText = normalizeText(fallback);
-  if (!Array.isArray(value)) return fallbackText;
-
-  const names = value
-    .map((author) => (typeof author === 'string' ? author.trim() : normalizeText(author?.name)))
-    .filter(Boolean);
-  return names.length ? names.join(', ') : fallbackText;
-}
 
 async function loadAtlasMeta(metaUrl?: string): Promise<AtlasMeta | null> {
   if (!metaUrl) return null;
@@ -109,17 +71,16 @@ async function loadAtlasMeta(metaUrl?: string): Promise<AtlasMeta | null> {
 }
 
 async function toAtlasSet(system: AtlasSystem): Promise<DemoSetConfig | null> {
-  const relAggregation = normalizeText(system.aggregation_url) || normalizeText(system.files?.aggregation);
+  const relAggregation = (system.aggregation_url || '').trim();
   if (!relAggregation) return null;
 
   const slash = relAggregation.lastIndexOf('/');
   const aggregation = slash >= 0 ? relAggregation.slice(slash + 1) : relAggregation;
   const basePath = slash >= 0 ? relAggregation.slice(0, slash + 1) : '';
-  const displayName = normalizeText(system.title) || normalizeText(system.name);
-  const slug = normalizeText(system.slug) || displayName.toLowerCase().replace(/\s+/g, '-');
+  const slug = (system.slug || '').trim() || (system.name || '').trim().toLowerCase().replace(/\s+/g, '-');
   if (!slug || !aggregation) return null;
 
-  const relMeta = normalizeText(system.meta_url) || normalizeText(system.files?.meta);
+  const relMeta = (system.meta_url || '').trim();
   const metaUrl = relMeta ? `${ATLAS_RAW_BASE}${relMeta}` : undefined;
   const meta = await loadAtlasMeta(metaUrl);
 
@@ -128,12 +89,12 @@ async function toAtlasSet(system: AtlasSystem): Promise<DemoSetConfig | null> {
     : Array.isArray(system.tags)
       ? system.tags
       : [];
-  const license = normalizeLicense(meta?.license) || normalizeLicense(system.license);
-  const units = normalizeText(meta?.units);
-  const version = normalizeText(meta?.version);
-  const created = normalizeText(meta?.created);
-  const catalogThumb = normalizeText(system.thumbnail) || normalizeText(system.files?.thumbnail);
-  const metaThumb = normalizeText(meta?.thumbnail) || normalizeText(meta?.files?.thumbnail);
+  const license = (meta?.license || system.license || '').trim();
+  const units = (meta?.units || '').trim();
+  const version = (meta?.version || '').trim();
+  const created = (meta?.created || '').trim();
+  const catalogThumb = (system.thumbnail || '').trim();
+  const metaThumb = (meta?.thumbnail || '').trim();
   const thumbnail = catalogThumb
     ? `${ATLAS_RAW_BASE}${catalogThumb}`
     : metaThumb
@@ -144,9 +105,9 @@ async function toAtlasSet(system: AtlasSystem): Promise<DemoSetConfig | null> {
 
   return {
     slug,
-    name: normalizeText(meta?.title) || displayName || slug,
-    description: normalizeDescription(meta?.description) || normalizeDescription(system.description),
-    author: normalizeAuthors(meta?.authors, meta?.author) || normalizeAuthors(system.authors, system.author),
+    name: (system.name || '').trim() || slug,
+    description: (system.description || '').trim(),
+    author: (system.author || '').trim(),
     path: `${ATLAS_RAW_BASE}${basePath}`,
     aggregation,
     colors,
@@ -162,7 +123,7 @@ async function toAtlasSet(system: AtlasSystem): Promise<DemoSetConfig | null> {
 }
 
 function logDatasetLoadResult(set: DemoSetConfig, success: boolean, reason?: string) {
-  const prefix = `[Reclaimed Design Systems] Dataset ${success ? 'loaded' : 'failed'}: ${set.slug}`;
+  const prefix = `[Wasp Atlas] Dataset ${success ? 'loaded' : 'failed'}: ${set.slug}`;
   if (success) {
     console.info(prefix, { name: set.name, path: `${set.path}${set.aggregation}` });
   } else {
@@ -218,7 +179,7 @@ export async function loadAvailableSets(): Promise<CatalogLoadResult> {
         return {
           sets: [],
           fromBackup: false,
-          notice: 'Could not load datasets from Reclaimed-Design-Systems catalog.json.',
+          notice: 'Could not load datasets from Wasp-Atlas catalog.json.',
         };
       }
     })();

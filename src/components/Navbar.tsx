@@ -1,34 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { projectInfo } from '../config/projectInfo';
 
 const BASE = import.meta.env.BASE_URL ?? '/';
 
 /**
  * Shared top-bar for both the landing page and the build screen.
+ * Displays the WASP Atlas logo on the left and a GitHub link on the right.
  */
 export function Navbar({ onOpenAbout }: { onOpenAbout: () => void }) {
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <Link className="navbar-item navbar-item--brand" to="/" aria-label={`${projectInfo.title} home`}>
+        <Link className="navbar-item" to="/" aria-label="WASP Atlas home">
           <img src={`${BASE}assets/waspatlas.png`} alt="WASP Atlas logo" className="brand-mark" />
-          <span className="brand-copy">
-            <span className="brand-copy__title">{projectInfo.shortTitle}</span>
-            <span className="brand-copy__subtitle">Wasp Atlas Explorer</span>
-          </span>
         </Link>
       </div>
       <div className="navbar__actions">
-        <button className="navbar__page-link navbar__page-button" type="button" onClick={onOpenAbout} aria-label={`About ${projectInfo.title}`}>
+        <button className="navbar__page-link navbar__page-button" type="button" onClick={onOpenAbout} aria-label="About Wasp Atlas">
           About
         </button>
         <a
           className="navbar__github-link"
-          href={projectInfo.currentRepoUrl}
+          href="https://github.com/Wasp-Framework/Wasp-Atas-Explorer"
           target="_blank"
           rel="noreferrer noopener"
-          aria-label="Open Reclaim Seoul GitHub repository"
+          aria-label="Open GitHub repository"
           title="GitHub"
         >
           <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">

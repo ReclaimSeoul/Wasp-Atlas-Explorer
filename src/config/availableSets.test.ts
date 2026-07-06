@@ -44,22 +44,6 @@ describe('availableSets', () => {
                 meta_url: 'systems/a-set/meta.json',
               },
               {
-                slug: 'bottles-system',
-                name: 'bottles-system',
-                description: {
-                  short: 'A system for reusing bottles with different sizes',
-                  long: '',
-                },
-                tags: [],
-                license: {
-                  value: 'CC-BY-4.0',
-                },
-                author: '',
-                thumbnail: 'systems/bottles-system/00_thumb.png',
-                aggregation_url: 'systems/bottles-system/aggregation.json',
-                meta_url: 'systems/bottles-system/meta.json',
-              },
-              {
                 slug: 'broken-set',
                 name: 'Broken Set',
                 description: 'Broken desc',
@@ -108,39 +92,6 @@ describe('availableSets', () => {
         };
       }
 
-      if (url.endsWith('/systems/bottles-system/meta.json')) {
-        return {
-          ok: true,
-          json: async () => ({
-            title: 'Multi-Bottle System',
-            authors: [
-              {
-                name: 'Andrea Rossi',
-                affiliation: 'Reclaim Seoul',
-              },
-            ],
-            license: {
-              value: 'CC-BY-4.0',
-            },
-            description: {
-              short: 'A system for reusing bottles with different sizes',
-              long: '',
-            },
-            tags: [],
-            units: '',
-            metrics: {
-              parts_total: 2,
-              rules_total: 9,
-            },
-            files: {
-              aggregation: 'bottles-system/aggregation.json',
-              meta: 'bottles-system/meta.json',
-              thumbnail: 'bottles-system/00_thumb.png',
-            },
-          }),
-        };
-      }
-
       if (url.endsWith('/systems/a-set/aggregation.json')) {
         return {
           ok: true,
@@ -162,13 +113,6 @@ describe('availableSets', () => {
         };
       }
 
-      if (url.endsWith('/systems/bottles-system/aggregation.json')) {
-        return {
-          ok: true,
-          json: async () => ({ name: 'Bottles aggregation' }),
-        };
-      }
-
       return { ok: false, json: async () => ({}) };
     });
 
@@ -179,32 +123,23 @@ describe('availableSets', () => {
 
     expect(result.fromBackup).toBe(false);
     expect(result.notice).toBeNull();
-    expect(result.sets.length).toBe(3);
+    expect(result.sets.length).toBe(2);
 
     const names = result.sets.map((set) => set.name);
-    expect(names).toEqual(['Alpha Set', 'Multi-Bottle System', 'Zeta Set']);
+    expect(names).toEqual(['Alpha Set', 'Zeta Set']);
 
     for (const set of result.sets) {
       expect(set.slug).toBeTruthy();
       expect(set.name).toBeTruthy();
-      expect(set.path).toContain('https://raw.githubusercontent.com/ReclaimSeoul/Reclaimed-Design-Systems/main/systems/');
+      expect(set.path).toContain('https://raw.githubusercontent.com/Wasp-Framework/Wasp-Atlas/main/systems/');
       expect(set.aggregation).toBe('aggregation.json');
       expect(Array.isArray(set.colors)).toBe(true);
       expect(typeof set.byPart).toBe('object');
       expect(Array.isArray(set.tags)).toBe(true);
     }
 
-    const bottlesSet = result.sets.find((set) => set.slug === 'bottles-system');
-    expect(bottlesSet).toMatchObject({
-      name: 'Multi-Bottle System',
-      description: 'A system for reusing bottles with different sizes',
-      author: 'Andrea Rossi',
-      license: 'CC-BY-4.0',
-      thumbnail: 'https://raw.githubusercontent.com/ReclaimSeoul/Reclaimed-Design-Systems/main/systems/bottles-system/00_thumb.png',
-    });
-
-    expect(createAggregationFromData).toHaveBeenCalledTimes(4);
-    expect(infoSpy).toHaveBeenCalledTimes(3);
+    expect(createAggregationFromData).toHaveBeenCalledTimes(3);
+    expect(infoSpy).toHaveBeenCalledTimes(2);
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0]?.[0]).toContain('Dataset failed: broken-set');
   });
