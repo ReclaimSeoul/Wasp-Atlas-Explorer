@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { projectInfo } from '../config/projectInfo';
 
 export function Footer() {
   return (
@@ -11,7 +12,9 @@ export function Footer() {
         </div>
 
         <div className="site-footer__bottom">
-          <span>&copy; {new Date().getFullYear()} Roger Winkler &amp; Andrea Rossi</span>
+          <span>
+            &copy; {new Date().getFullYear()} {projectInfo.workshop}. Based on Wasp Atlas by Roger Winkler &amp; Andrea Rossi.
+          </span>
         </div>
       </div>
     </footer>
