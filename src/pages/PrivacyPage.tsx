@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { projectInfo } from '../config/projectInfo';
 
 export function PrivacyPage({ onOpenAbout }: { onOpenAbout: () => void }) {
   return (
@@ -12,9 +13,10 @@ export function PrivacyPage({ onOpenAbout }: { onOpenAbout: () => void }) {
         <section className="legal-page__section">
           <h2>Overview</h2>
           <p>
-            WASP Atlas is a static, open-source website. We take your privacy
-            seriously and have designed this site to collect as little data as
-            possible.
+            {projectInfo.title} is a static, open-source workshop website for{' '}
+            {projectInfo.unitTitle} at {projectInfo.school}. It is adapted from
+            the original Wasp Atlas Explorer and is designed to collect as
+            little data as possible.
           </p>
         </section>
 
@@ -47,8 +49,8 @@ export function PrivacyPage({ onOpenAbout }: { onOpenAbout: () => void }) {
         <section className="legal-page__section">
           <h2>External links</h2>
           <p>
-            This site contains links to external websites (GitHub, Food4Rhino,
-            Google Forms). These third-party sites have their own privacy
+            This site contains links to external websites, including GitHub,
+            Food4Rhino, and Google Forms. These third-party sites have their own privacy
             policies, and we have no control over their data practices.
           </p>
         </section>
@@ -57,7 +59,7 @@ export function PrivacyPage({ onOpenAbout }: { onOpenAbout: () => void }) {
           <h2>Contact</h2>
           <p>
             If you have questions about this privacy policy, please contact us at{' '}
-            <a href="mailto:hello@rogerwinkler.de">hello@rogerwinkler.de</a>.
+            <a href={`mailto:${projectInfo.contactEmail}`}>{projectInfo.contactEmail}</a>.
           </p>
         </section>
       </main>

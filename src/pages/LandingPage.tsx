@@ -5,6 +5,7 @@ import { loadAvailableSets, type DemoSetConfig } from '../config/availableSets';
 import { aggregationService } from '../lib/aggregationService';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { projectInfo } from '../config/projectInfo';
 
 async function loadJson(path: string) {
   const response = await fetch(path);
@@ -135,15 +136,20 @@ export function LandingPage({ onOpenAbout }: { onOpenAbout: () => void }) {
 
       <main className="landing__main">
         <section className="landing__hero landing__hero--home" aria-label="Introduction">
-          <span className="landing__hero-label">Wasp Atlas of Modularity</span>
+          <span className="landing__hero-label">{projectInfo.school} / {projectInfo.unit}</span>
           <h1 className="landing__hero-title">
-            Explore modular<br />building systems
+            {projectInfo.workshop}<br />Wasp Atlas Explorer
           </h1>
           <p className="landing__hero-desc">
-            A growing open library of modular building systems designed with the
-            Grasshopper plug-in WASP, a combinatorial toolkit for discrete design.
-            Each dataset encodes parts, connection rules, and spatial logic,
-            ready to explore, reconfigure, and grow.
+            A workshop edition of{' '}
+            <a href={projectInfo.originalAtlasUrl} target="_blank" rel="noreferrer noopener">
+              Wasp Atlas
+            </a>{' '}
+            for {projectInfo.unitTitle}. The unit investigates reclaimed urban
+            materials, rapid digitization, discrete aggregation with Wasp, and
+            augmented assembly as tools for temporary architecture in Seoul.
+            This clone keeps the original Wasp Atlas datasets and engine
+            references intact.
           </p>
           <div className="landing__hero-actions">
             <Link to="/datasets" className="landing__cta-primary">
@@ -151,11 +157,11 @@ export function LandingPage({ onOpenAbout }: { onOpenAbout: () => void }) {
             </Link>
             <a
               className="landing__cta-secondary"
-              href="https://forms.gle/SYdRbsySKonq19GJ8"
+              href={projectInfo.submitDatasetUrl}
               target="_blank"
               rel="noreferrer noopener"
             >
-              Submit a dataset ⤴
+              Submit a dataset
             </a>
           </div>
         </section>
