@@ -35,6 +35,7 @@ import {
   raycastParts,
   unhighlightGhosts,
 } from './viewerInteraction';
+import { sanitizeAggregationData } from './uploadSanitizer';
 
 /* ── helpers ── */
 
@@ -115,8 +116,9 @@ export async function loadDataset(
   set: { path: string; aggregation: string; colors?: string[]; byPart?: Record<string, string> },
 ): Promise<LoadResult> {
   const data = await loadJson(`${set.path}${set.aggregation}`);
+  const { aggregationData } = sanitizeAggregationData(data);
   const colorsConfig = await resolveColors(set);
-  const agg = createAggregationFromData(data);
+  const agg = createAggregationFromData(aggregationData);
   assertAggregationExportCompatibility(agg, `loadDataset(${set.path}${set.aggregation})`);
   if (colorsConfig) applyAggregationColors(agg, colorsConfig);
 

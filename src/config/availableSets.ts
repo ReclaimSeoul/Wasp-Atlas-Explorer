@@ -1,4 +1,5 @@
 import { createAggregationFromData } from 'webwaspjs';
+import { sanitizeAggregationData } from '../lib/uploadSanitizer';
 
 const DEFAULT_ATLAS_RAW_BASE = 'https://raw.githubusercontent.com/ReclaimSeoul/Reclaimed-Design-Systems/main/';
 const ATLAS_RAW_BASE = (import.meta.env.VITE_ATLAS_RAW_BASE || DEFAULT_ATLAS_RAW_BASE).replace(/\/?$/, '/');
@@ -179,7 +180,8 @@ async function validateAtlasSet(set: DemoSetConfig): Promise<boolean> {
     }
 
     const data = await response.json();
-    createAggregationFromData(data);
+    const { aggregationData } = sanitizeAggregationData(data);
+    createAggregationFromData(aggregationData);
     logDatasetLoadResult(set, true);
     return true;
   } catch (error: any) {

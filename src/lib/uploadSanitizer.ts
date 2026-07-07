@@ -35,7 +35,7 @@ function looksLikeCompactAggregationExport(rawData: any) {
   );
 }
 
-export function sanitizeUploadedAggregationData(rawData: any): SanitizedUploadResult {
+export function sanitizeAggregationData(rawData: any): SanitizedUploadResult {
   if (looksLikeCompactAggregationExport(rawData)) {
     throw new Error(
       'This file uses the compact aggregation export format and cannot be uploaded here. ' +
@@ -88,4 +88,8 @@ export function sanitizeUploadedAggregationData(rawData: any): SanitizedUploadRe
   }
 
   return { aggregationData, warnings };
+}
+
+export function sanitizeUploadedAggregationData(rawData: any): SanitizedUploadResult {
+  return sanitizeAggregationData(rawData);
 }

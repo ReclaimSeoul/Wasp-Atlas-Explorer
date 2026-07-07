@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Visualizer } from 'webwaspjs';
 import { loadAvailableSets, type DemoSetConfig } from '../config/availableSets';
 import { aggregationService } from '../lib/aggregationService';
+import { sanitizeAggregationData } from '../lib/uploadSanitizer';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { projectInfo } from '../config/projectInfo';
@@ -79,9 +80,10 @@ export function LandingPage({ onOpenAbout }: { onOpenAbout: () => void }) {
     (async () => {
       try {
         const data = await loadJson(`${brioSet.path}${brioSet.aggregation}`);
+        const { aggregationData } = sanitizeAggregationData(data);
         if (disposed) return;
 
-        aggregation = aggregationService.createAggregationFromData(data);
+        aggregation = aggregationService.createAggregationFromData(aggregationData);
         const catalogParts = aggregationService.getAggregationCatalogParts(aggregation);
         const whiteByPart: Record<string, string> = {};
         for (const part of catalogParts) {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Visualizer } from 'webwaspjs';
 import { CUSTOM_UPLOAD_SLUG, loadAvailableSets, type DemoSetConfig } from '../config/availableSets';
 import { aggregationService, centerCameraOnMesh } from '../lib/aggregationService';
-import { sanitizeUploadedAggregationData } from '../lib/uploadSanitizer';
+import { sanitizeAggregationData, sanitizeUploadedAggregationData } from '../lib/uploadSanitizer';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { useBuildStore } from '../state/buildStore';
@@ -68,8 +68,9 @@ function DatasetCard({
     (async () => {
       try {
         const data = await loadJson(`${set.path}${set.aggregation}`);
+        const { aggregationData } = sanitizeAggregationData(data);
         const colorsConfig = await resolveColors(set);
-        const agg = aggregationService.createAggregationFromData(data);
+        const agg = aggregationService.createAggregationFromData(aggregationData);
         if (colorsConfig) aggregationService.applyAggregationColors(agg, colorsConfig);
         const parts = aggregationService.getAggregationCatalogParts(agg);
         if (disposed || !parts.length) return;

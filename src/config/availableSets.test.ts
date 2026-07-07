@@ -12,6 +12,9 @@ describe('availableSets', () => {
       if (data?.invalid) {
         throw new Error('Invalid aggregation payload');
       }
+      if (data?.global_constraints?.length) {
+        throw new Error('Unsupported global constraints');
+      }
       return {};
     });
     vi.doMock('webwaspjs', () => ({ createAggregationFromData }));
@@ -144,7 +147,10 @@ describe('availableSets', () => {
       if (url.endsWith('/systems/a-set/aggregation.json')) {
         return {
           ok: true,
-          json: async () => ({ name: 'Alpha aggregation' }),
+          json: async () => ({
+            name: 'Alpha aggregation',
+            global_constraints: [{ type: 'MeshConstraint' }],
+          }),
         };
       }
 
@@ -204,6 +210,10 @@ describe('availableSets', () => {
     });
 
     expect(createAggregationFromData).toHaveBeenCalledTimes(4);
+    const alphaValidationPayload = createAggregationFromData.mock.calls
+      .map((call) => call[0])
+      .find((payload) => payload.name === 'Alpha aggregation');
+    expect(alphaValidationPayload.global_constraints).toEqual([]);
     expect(infoSpy).toHaveBeenCalledTimes(3);
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0]?.[0]).toContain('Dataset failed: broken-set');
